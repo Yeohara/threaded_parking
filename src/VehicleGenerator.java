@@ -2,7 +2,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class VehicleGenerator {
-    public Random random;
+    private final Random random;
     private final AtomicLong currId = new AtomicLong();
 
     private long getNextId() {

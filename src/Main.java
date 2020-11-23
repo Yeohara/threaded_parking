@@ -10,6 +10,6 @@ public class Main {
     if (interval_in <= 0 || interval_out <= 0) {
         throw new IllegalArgumentException("Интервалы должны быть больше 0");
     }
-    Parking parking = new Parking(num_of_parking_spaces, max_queue_size, interval_in, interval_out);
+    new Parking(num_of_parking_spaces, max_queue_size, interval_in, interval_out);
     }
 }
