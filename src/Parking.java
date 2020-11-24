@@ -1,17 +1,31 @@
 import java.util.*;
 
+/**
+ * Класс парковки
+ */
 public class Parking {
     private int num_of_parking_spaces;
     private final int max_queue_size;
     private boolean running;
     private final int interval_in;
     private final int interval_out;
+    /** Синхронизируемый "замок" для поточного взаимодействия */
     private final Object lock = new Object();
+    /** Коллекция входной очереди */
     private final Queue<Vehicle> queue;
+    /** Коллекция мест парковки */
     private final ArrayList<Vehicle> parking;
+    /** @see VehicleGenerator */
     private final VehicleGenerator vehicleGenerator;
     private final Random random;
 
+    /**
+     * Конструктор - создание нового объекта "парковки" с определенными значениями
+     * @param num_of_parking_spaces максимум места на парковке
+     * @param max_queue_size максимальный размер очереди на вход
+     * @param interval_in интервал генерации машин на вход
+     * @param interval_out интервал генерации машин на выход
+     */
     public Parking(int num_of_parking_spaces, int max_queue_size, int interval_in, int interval_out){
         this.num_of_parking_spaces = num_of_parking_spaces;
         this.max_queue_size = max_queue_size;
@@ -29,7 +43,9 @@ public class Parking {
         new Thread(new printState()).start();
     }
 
-
+    /**
+     * Поток ожидающий ввода "q" для заершения работы всей программы.
+     */
     private class exitState implements Runnable {
         public void run() {
             Scanner scanner = new Scanner(System.in);
@@ -40,6 +56,9 @@ public class Parking {
         }
     }
 
+    /**
+     * Поток выводящий стастистику заполнения {@link Parking#queue} и {@link Parking#parking} каждые 5 секунд
+     */
     private class printState implements Runnable {
         public void run() {
             try {
@@ -57,6 +76,13 @@ public class Parking {
         }
     }
 
+    /**
+     * Поток генерирующий {@link Vehicle} на вход в {@link Parking#queue}.
+     * Если {@link Parking#queue} пустое и {@link Parking#parking} имеет достаточно места,
+     * машина заезжает сразу на парковку.
+     * Если {@link Parking#queue} не пустое, тогда машина встаёт в конец очереди.
+     * Если {@link Parking#queue} полное, вызывается кармагеддон.
+     */
     private class queueIn implements Runnable {
         public void run() {
             try {
@@ -86,12 +112,19 @@ public class Parking {
 
     }
 
+    /**
+     * Функция добавления {@link Vehicle} в {@link Parking#parking}
+     * @param vehicle {@link Vehicle} для добавления на парковку
+     */
     private void parkVehicle(Vehicle vehicle) {
         parking.add(vehicle);
         num_of_parking_spaces -= vehicle.getRequired_space();
         vehicle.enterParking();
     }
 
+    /**
+     * Поток достающий {@link Vehicle} из {@link Parking#queue} и добавляющий их в {@link Parking#parking} по мере освобождения парковки
+     */
     private class parkingIn implements Runnable {
         public void run() {
             try {
@@ -112,6 +145,9 @@ public class Parking {
         }
     }
 
+    /**
+     * Поток удаляющий {@link Vehicle} из {@link Parking#queue}
+     */
     private class parkingOut implements Runnable {
         public void run() {
             try {

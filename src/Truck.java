@@ -1,6 +1,7 @@
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Truck extends Vehicle {
+    /** Поле общего счётчика всех {@link Truck}-объектов на парковке */
     private static final AtomicInteger counter = new AtomicInteger(0);
     public Truck(long id) {
         this.required_space = 2;
