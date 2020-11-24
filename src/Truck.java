@@ -30,7 +30,7 @@ public class Truck extends Vehicle {
 
     @Override
     public void exitParking() {
-        counter.incrementAndGet();
+        counter.decrementAndGet();
         System.out.println("Грузовой автомобиль с id = " + this.getId() + " покинул парковку.");
     }
 }

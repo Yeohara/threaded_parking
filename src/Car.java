@@ -31,7 +31,7 @@ public class Car extends Vehicle {
 
     @Override
     public void exitParking() {
-        counter.incrementAndGet();
+        counter.decrementAndGet();
         System.out.println("Легковой автомобиль с id = " + this.getId() + " покинул парковку.");
     }
 }
